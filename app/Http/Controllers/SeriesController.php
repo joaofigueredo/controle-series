@@ -6,15 +6,25 @@ use App\Models\Episode;
 use App\Models\Series;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\Autenticador;
 use App\Http\Requests\SeriesFormRequest;
 use App\Models\Season;
+use App\Repositories\EloquentSeriesRepository;
+use App\Repositories\SeriesRepository;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class SeriesController extends Controller
 {
-    public function index(Request $request)
+    
+    public function __construct(private SeriesRepository $repository)
     {
-        
+        $this->middleware('autenticador')->except('index');
+    }
+
+    public function index(Request $request)
+    {        
         $series = Series::with(['seasons'])->get(); 
         $mensagemSucesso = session('mensagem.sucesso');
 
@@ -29,27 +39,8 @@ class SeriesController extends Controller
 
     public function store(SeriesFormRequest $request)
     {
-        $serie = Series::create($request->all());
-
-        for($i = 1; $i <= $request->seasonsQty; $i++) {
-                $seasons[] = [
-                    'series_id' => $serie->id, 
-                    'number' => $i,
-                ];
-        }
-            Season::insert($seasons);
-            
-            $episodes = [];
-            foreach($serie->seasons as $season) {
-                for($j = 1; $j <= $request->episodesPerSeason; $j++) {
-                    $episodes[] = [
-                        'season_id' => $season->id,
-                        'number' => $j
-                    ];
-                }
-            }
-
-        Episode::insert($episodes);
+        //injeção de dependecia
+        $serie = $this->repository->add($request);
 
         return redirect()
             ->route('series.index')
@@ -71,6 +62,7 @@ class SeriesController extends Controller
 
     public function update(Series $series, SeriesFormRequest $request)
     {
+        
         $series->fill($request->all());
         $series->save();
 
