@@ -2,18 +2,25 @@
 
 namespace App\http\Controllers;
 
+use App\Events\SeriesCreated as EventsSeriesCreated;
 use App\Models\Episode;
 use App\Models\Series;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\Autenticador;
 use App\Http\Requests\SeriesFormRequest;
+use App\Mail\SeriesCreated;
 use App\Models\Season;
 use App\Repositories\EloquentSeriesRepository;
 use App\Repositories\SeriesRepository;
+use DateTime;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+
 
 class SeriesController extends Controller
 {
@@ -39,8 +46,19 @@ class SeriesController extends Controller
 
     public function store(SeriesFormRequest $request)
     {
+        $coverPath = $request->hasFile('cover')
+            ?  $request->file('cover')->store('series_cover', 'public')
+            : null;
+        $request->coverPath = $coverPath;
         //injeção de dependecia
         $serie = $this->repository->add($request);
+        $seriesCreatedEvent = new EventsSeriesCreated(
+            $serie->nome,
+            $serie->id,
+            $request->seasonsQty,
+            $request->episodesPerSeason
+        );
+        event($seriesCreatedEvent);
 
         return redirect()
             ->route('series.index')
@@ -62,7 +80,6 @@ class SeriesController extends Controller
 
     public function update(Series $series, SeriesFormRequest $request)
     {
-        
         $series->fill($request->all());
         $series->save();
 

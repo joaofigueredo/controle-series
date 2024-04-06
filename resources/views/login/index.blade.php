@@ -12,7 +12,7 @@
                                     <p class="text-white-50 mb-5">Entre com seu login e senha!</p>
 
                                     <div class="form-outline form-white mb-4">
-                                        <input type="email" id="email" name="email" class="form-control form-control-lg" />
+                                        <input type="email" id="email" name="email" class="form-control form-control-lg" autofocus />
                                         <label class="form-label" for="email">Login</label>
                                     </div>
 

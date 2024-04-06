@@ -18,20 +18,20 @@
         </li>
         @auth
         <li class="nav-item">
-          <a class="nav-link link-light" href="{{route('series.create')}}">Adicionar Série</a>
+          <a class="nav-link link-light mb-2" href="{{route('series.create')}}">Adicionar Série</a>
         </li>
         @endauth
       </ul>
       @auth
       <form action="{{ route('logout') }}">
-        <button class="btn btn-light">
+        <button class="btn btn-primary mb-2">
           Sair
         </button>
       </form>
       @endauth
 
       @guest
-      <a href="{{ route('login') }}" class="link-light link-underline-primary">Entrar</a>
+      <a href="{{ route('login') }}" class="nav-link link-light">Entrar</a>
       @endguest
     </div>
   </nav>
@@ -57,13 +57,13 @@
     {{$slot}}
   </div>
 
-  <footer class="bg-body-tertiary text-center text-lg-start ">
-    <!-- Copyright -->
+  <footer class="bg-body-tertiary text-center text-lg-start sticky-top">
     <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
       © 2024 Copyright:
-      <a class="text-body" href="https://github.com/joaofigueredo" target="_blank">joaoFigueredo</a>
+      <a class="text-body" href="https://github.com/joaofigueredo" target="_blank">
+        joaoFigueredo
+      </a>
     </div>
-    <!-- Copyright -->
   </footer>
 
 </body>

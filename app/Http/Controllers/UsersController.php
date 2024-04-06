@@ -18,7 +18,7 @@ class UsersController extends Controller
     {
         $data = $request->except(['_token']);
         $data['password'] = Hash::make($data['password']);
-        dd($data);
+        
 
         $user = User::create($data);
         Auth::login($user);

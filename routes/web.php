@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SeriesController;
 use App\Http\Controllers\UsersController;
 use App\Http\Middleware\Autenticador;
+use App\Mail\SeriesCreated;
 use Illuminate\Http\Request;
 
 /*
@@ -20,10 +21,12 @@ use Illuminate\Http\Request;
 |
 */
 
-
-
 Route::resource('/series', SeriesController::class)
     ->except(['show']);
+
+Route::get('/email', function(){
+    return new SeriesCreated('Serie de Teste', 1, 5, 10);
+});
 
 Route::middleware('autenticador')->group(function(){
     Route::get('/', function () {
@@ -39,7 +42,6 @@ Route::middleware('autenticador')->group(function(){
     Route::post('/seasons/{season}/episodes', [EpisodesController::class, 'update'])
         ->name('episodes.update');
 });
-
 
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::post('/login', [LoginController::class, 'store'])->name('login.store');
