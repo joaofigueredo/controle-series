@@ -23,7 +23,7 @@ class SeriesFormRequest extends FormRequest
     {
         return [
             'nome' => ['required', 'min:3'],
-            
+            'cover' =>['image']
         ];
     }
 
@@ -32,7 +32,7 @@ class SeriesFormRequest extends FormRequest
         return[
             'nome.required' => 'O campo nome é obrigatório!',
             'nome.min' => 'O nome precisa ter pelo menos :min caracteres!',
-            
+            'cover.image' => 'Formato invalido!'
         ];
     }
 }

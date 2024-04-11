@@ -46,9 +46,11 @@ class SeriesController extends Controller
 
     public function store(SeriesFormRequest $request)
     {
+        dd($request);
         $coverPath = $request->hasFile('cover')
             ?  $request->file('cover')->store('series_cover', 'public')
             : null;
+
         $request->coverPath = $coverPath;
         //injeção de dependecia
         $serie = $this->repository->add($request);
@@ -80,6 +82,9 @@ class SeriesController extends Controller
 
     public function update(Series $series, SeriesFormRequest $request)
     {
+        dd($request);
+        $coverPath = $request->file($request->cover);
+        dd($coverPath);
         $series->fill($request->all());
         $series->save();
 
